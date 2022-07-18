@@ -1,8 +1,10 @@
 #include <iostream>
 #include <SDL.h>
 #include "palette.h"
+#include "Snake.h"
 
 #define SQUARE 25
+#define FPS 60
 
 static int WIDTH = 800;
 static int HEIGHT = 600;
@@ -23,6 +25,7 @@ int main() {
 	const int MAP_WIDTH = 800;
 	const int MAP_HEIGHT = 600;
 	SDL_Rect map = {(WIDTH / 2) - (MAP_WIDTH / 2), (HEIGHT / 2) - (MAP_HEIGHT / 2), MAP_WIDTH, MAP_HEIGHT};
+	Snake snake((WIDTH / 2) - (MAP_WIDTH / 2), (HEIGHT / 2) - (MAP_HEIGHT / 2));
 
 	bool quit = false;
 	while (!quit) {
@@ -37,6 +40,9 @@ int main() {
 							WIDTH = event.window.data1;
 							HEIGHT = event.window.data2;
 							map = {(WIDTH / 2) - (MAP_WIDTH / 2), (HEIGHT / 2) - (MAP_HEIGHT / 2), MAP_WIDTH, MAP_HEIGHT};
+
+							snake.set_x((WIDTH / 2) - (MAP_WIDTH / 2));
+							snake.set_y((HEIGHT / 2) - (MAP_HEIGHT / 2));
 							break;
 						default:
 							break;
@@ -44,16 +50,16 @@ int main() {
 				case SDL_KEYDOWN:
 					switch(event.key.keysym.sym) {
 						case SDLK_w:
-							std::cout << "w" << std::endl;
+							snake.set_direction(0, -1);
 							break;
 						case SDLK_a:
-							std::cout << "a" << std::endl;
+							snake.set_direction(-1, 0);
 							break;
 						case SDLK_s:
-							std::cout << "s" << std::endl;
+							snake.set_direction(0, 1);
 							break;
 						case SDLK_d:
-							std::cout << "d" << std::endl;
+							snake.set_direction(1, 0);
 							break;
 						default:
 							break;
@@ -76,7 +82,12 @@ int main() {
 			SDL_RenderDrawLine(renderer, (WIDTH / 2) - (MAP_WIDTH / 2), y, (WIDTH / 2) + (MAP_WIDTH / 2), y);
 		}
 
+		if (snake.get_x() < ((WIDTH / 2) + (MAP_WIDTH / 2) - SQUARE) && snake.get_y() < ((HEIGHT / 2) + (MAP_HEIGHT / 2) - SQUARE)) {
+			snake.update();
+		}
+		snake.render(renderer, palette[3]);
 		SDL_RenderPresent(renderer);
+		SDL_Delay(FPS);
 	}
 
 	SDL_DestroyWindow(window);
