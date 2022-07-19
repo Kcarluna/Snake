@@ -13,7 +13,7 @@ public:
 	void set_y(int y);
 	int get_x() const;
 	int get_y() const;
-	bool get_foodExists() const;
+	bool foodExists() const;
 
 	void set_direction(int x, int y);
 
@@ -21,6 +21,7 @@ public:
 	void eat();
 	void grow();
 
+	bool isDead() const;
 	void update();
 	void render(SDL_Renderer *renderer, SDL_Color palette) const ;
 };

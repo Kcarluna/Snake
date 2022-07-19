@@ -26,7 +26,7 @@ int Snake::get_y() const {
 	return m_snake[0].y;
 }
 
-bool Snake::get_foodExists() const {
+bool Snake::foodExists() const {
 	return m_foodExists;
 }
 
@@ -59,9 +59,19 @@ void Snake::grow() {
 	m_snake.push_front({m_snake[0].x, m_snake[0].y, SQUARE, SQUARE});
 }
 
+
+bool Snake::isDead() const {
+	for (int i = 1; i < m_snake.size(); i++) {
+		if (m_snake[0].x == m_snake[i].x && m_snake[0].y == m_snake[i].y) {
+			return true;
+		}
+	}
+	return false;
+}
+
 void Snake::update() {
 	for (int i = m_snake.size() - 1; i > 0; i--) {
-		m_snake[i]= m_snake[i - 1];
+		m_snake[i] = m_snake[i - 1];
 	}
 	m_snake[0].x += m_dx * SQUARE;
 	m_snake[0].y += m_dy * SQUARE;

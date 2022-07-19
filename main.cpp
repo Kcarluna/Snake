@@ -107,12 +107,18 @@ int main() {
 	while (!QUIT) {
 		update(&event);
 
-		if (!SNAKE.get_foodExists()) {
+		if (!SNAKE.foodExists()) {
 			SNAKE.generate_food(LBOUND_WIDTH / SQUARE, LBOUND_HEIGHT / SQUARE, (UBOUND_WIDTH - SQUARE) / SQUARE, (UBOUND_HEIGHT - SQUARE) / SQUARE);
+		}
+		if (SNAKE.get_x() < LBOUND_WIDTH || SNAKE.get_x() > (UBOUND_WIDTH - SQUARE) || SNAKE.get_y() < LBOUND_HEIGHT || SNAKE.get_y() > (UBOUND_HEIGHT - SQUARE)) {
+			std::cout << "DED" << std::endl;
 		}
 		SNAKE.eat();
 		if (!PAUSED) {
 			SNAKE.update();
+			if (SNAKE.isDead()) {
+				std::cout << "DEDDIE" << std::endl;
+			}
 		}
 
 		render(renderer);
