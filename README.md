@@ -1,12 +1,10 @@
 ## SNAKE
 
 ### QUICK START
-'''
+```
 chmod +x ./build.sh
-'''
-'''
-./build.sh 
-'''
+./build.sh
+```
 
 ### RESOURCES
 - Snake: https://en.wikipedia.org/wiki/Snake_(video_game_genre)
