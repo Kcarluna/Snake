@@ -4,10 +4,20 @@
 #include "Snake.h"
 
 #define SQUARE 25
-#define FPS 60
+#define FPS 120
 
 static int WIDTH = 800;
 static int HEIGHT = 600;
+
+const int MAP_WIDTH = 800;
+const int MAP_HEIGHT = 600;
+
+static int LBOUND_WIDTH = (WIDTH / 2) - (MAP_WIDTH / 2); 
+static int LBOUND_HEIGHT = (HEIGHT / 2) - (MAP_HEIGHT / 2); 
+
+static int UBOUND_WIDTH = (WIDTH / 2) + (MAP_WIDTH / 2); 
+static int UBOUND_HEIGHT = (HEIGHT / 2) + (MAP_HEIGHT / 2); 
+
 
 int main() {
 	SDL_Window *window;
@@ -22,10 +32,9 @@ int main() {
 		return 1;
 	}
 	SDL_SetWindowTitle(window, "SNAKE");
-	const int MAP_WIDTH = 800;
-	const int MAP_HEIGHT = 600;
-	SDL_Rect map = {(WIDTH / 2) - (MAP_WIDTH / 2), (HEIGHT / 2) - (MAP_HEIGHT / 2), MAP_WIDTH, MAP_HEIGHT};
-	Snake snake((WIDTH / 2) - (MAP_WIDTH / 2), (HEIGHT / 2) - (MAP_HEIGHT / 2));
+
+	SDL_Rect map = {LBOUND_WIDTH, LBOUND_HEIGHT, MAP_WIDTH, MAP_HEIGHT};
+	Snake snake(0, 0);
 
 	bool quit = false;
 	while (!quit) {
@@ -39,10 +48,15 @@ int main() {
 						case SDL_WINDOWEVENT_RESIZED:
 							WIDTH = event.window.data1;
 							HEIGHT = event.window.data2;
-							map = {(WIDTH / 2) - (MAP_WIDTH / 2), (HEIGHT / 2) - (MAP_HEIGHT / 2), MAP_WIDTH, MAP_HEIGHT};
+							LBOUND_WIDTH = (WIDTH / 2) - (MAP_WIDTH / 2); 
+							LBOUND_HEIGHT = (HEIGHT / 2) - (MAP_HEIGHT / 2); 
+							UBOUND_WIDTH = (WIDTH / 2) + (MAP_WIDTH / 2); 
+							UBOUND_HEIGHT = (HEIGHT / 2) + (MAP_HEIGHT / 2); 
 
-							snake.set_x((WIDTH / 2) - (MAP_WIDTH / 2));
-							snake.set_y((HEIGHT / 2) - (MAP_HEIGHT / 2));
+							map = {LBOUND_WIDTH, LBOUND_HEIGHT, MAP_WIDTH, MAP_HEIGHT};
+
+							snake.set_x(LBOUND_WIDTH);
+							snake.set_y(LBOUND_HEIGHT);
 							break;
 						default:
 							break;
@@ -75,16 +89,18 @@ int main() {
 		SDL_RenderFillRect(renderer, &map);
 
 		SDL_SetRenderDrawColor(renderer, palette[2].r, palette[2].g, palette[2].b, SDL_ALPHA_OPAQUE);
-		for (int x = (WIDTH / 2) - (MAP_WIDTH / 2); x <= (WIDTH / 2) + (MAP_WIDTH / 2); x += SQUARE) {
-			SDL_RenderDrawLine(renderer, x, (HEIGHT / 2) - (MAP_HEIGHT / 2), x, (HEIGHT / 2) + (MAP_HEIGHT / 2));
+		for (int x = LBOUND_WIDTH; x <= UBOUND_WIDTH; x += SQUARE) {
+			SDL_RenderDrawLine(renderer, x, LBOUND_HEIGHT, x, UBOUND_HEIGHT);
 		}
-		for (int y = (HEIGHT / 2) - (MAP_HEIGHT / 2); y <= (HEIGHT / 2) + (MAP_HEIGHT / 2); y += SQUARE) {
-			SDL_RenderDrawLine(renderer, (WIDTH / 2) - (MAP_WIDTH / 2), y, (WIDTH / 2) + (MAP_WIDTH / 2), y);
+		for (int y = LBOUND_HEIGHT; y <= UBOUND_HEIGHT; y += SQUARE) {
+			SDL_RenderDrawLine(renderer, LBOUND_WIDTH, y, UBOUND_WIDTH, y);
 		}
 
-		if (snake.get_x() < ((WIDTH / 2) + (MAP_WIDTH / 2) - SQUARE) && snake.get_y() < ((HEIGHT / 2) + (MAP_HEIGHT / 2) - SQUARE)) {
-			snake.update();
+		if (!snake.get_foodExists()) {
+			snake.generate_food(LBOUND_WIDTH / SQUARE, LBOUND_HEIGHT / SQUARE, (UBOUND_WIDTH - SQUARE) / SQUARE, (UBOUND_HEIGHT - SQUARE) / SQUARE);
 		}
+		snake.eat();
+		snake.update();
 		snake.render(renderer, palette[3]);
 		SDL_RenderPresent(renderer);
 		SDL_Delay(FPS);
