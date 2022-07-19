@@ -31,8 +31,42 @@ bool Snake::foodExists() const {
 }
 
 void Snake::set_direction(int x, int y) {
+	if (x == 0 && y == -1) {
+		m_up = true;
+		m_down = false;
+		m_left = false;
+		m_right = false;
+	} else if (x == 0 && y == 1) {
+		m_up = false;
+		m_down = true;
+		m_left = false;
+		m_right = false;
+	} else if (x == -1 && y == 0) {
+		m_up = false;
+		m_down = false;
+		m_left = true;
+		m_right = false;
+	} else if (x == 1 && y == 0) {
+		m_up = false;
+		m_down = false;
+		m_left = false;
+		m_right = true;
+	}
 	m_dx = x;
 	m_dy = y;
+}
+
+bool Snake::isUp() const {
+	return m_up;
+}
+bool Snake::isDown() const {
+	return m_down;
+}
+bool Snake::isLeft() const {
+	return m_left;
+}
+bool Snake::isRight() const {
+	return m_right;
 }
 
 void Snake::generate_food(int lbound_width, int lbound_height, int ubound_width, int ubound_height) {

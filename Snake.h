@@ -7,6 +7,7 @@ private:
 	std::deque<SDL_Rect> m_snake = {};
 	bool m_foodExists = false;
 	SDL_Rect m_food = {};
+	bool m_up = false, m_down = false, m_left = false, m_right = true;
 public:
 	Snake(int x, int y);
 	void set_x(int x);
@@ -16,6 +17,10 @@ public:
 	bool foodExists() const;
 
 	void set_direction(int x, int y);
+	bool isUp() const;
+	bool isDown() const;
+	bool isLeft() const;
+	bool isRight() const;
 
 	void generate_food(int lbound_width, int lbound_height, int ubound_width, int ubound_height);
 	void eat();

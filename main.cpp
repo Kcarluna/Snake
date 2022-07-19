@@ -48,16 +48,24 @@ while(SDL_PollEvent(event)) {
 				case SDL_KEYDOWN:
 					switch(event->key.keysym.sym) {
 						case SDLK_w:
-							SNAKE.set_direction(0, -1);
+							if (!SNAKE.isDown()) {
+								SNAKE.set_direction(0, -1);
+							}
 							break;
 						case SDLK_a:
-							SNAKE.set_direction(-1, 0);
+							if (!SNAKE.isRight()) {
+								SNAKE.set_direction(-1, 0);
+							}
 							break;
 						case SDLK_s:
-							SNAKE.set_direction(0, 1);
+							if (!SNAKE.isUp()) {
+								SNAKE.set_direction(0, 1);
+							}
 							break;
 						case SDLK_d:
-							SNAKE.set_direction(1, 0);
+							if (!SNAKE.isLeft()) {
+								SNAKE.set_direction(1, 0);
+							}
 							break;
 						case SDLK_SPACE:
 							PAUSED = !PAUSED;
@@ -90,6 +98,10 @@ void render(SDL_Renderer *renderer) {
 		SDL_RenderPresent(renderer);
 }
 
+void render_death_scene(std::string msg) {
+	std::cout << msg << std::endl;
+}
+
 int main() {
 	SDL_Window *window;
 	SDL_Renderer *renderer;
@@ -111,13 +123,15 @@ int main() {
 			SNAKE.generate_food(LBOUND_WIDTH / SQUARE, LBOUND_HEIGHT / SQUARE, (UBOUND_WIDTH - SQUARE) / SQUARE, (UBOUND_HEIGHT - SQUARE) / SQUARE);
 		}
 		if (SNAKE.get_x() < LBOUND_WIDTH || SNAKE.get_x() > (UBOUND_WIDTH - SQUARE) || SNAKE.get_y() < LBOUND_HEIGHT || SNAKE.get_y() > (UBOUND_HEIGHT - SQUARE)) {
-			std::cout << "DED" << std::endl;
+			render_death_scene("YOU HIT THE WALL");
+			PAUSED = true;
 		}
 		SNAKE.eat();
 		if (!PAUSED) {
 			SNAKE.update();
 			if (SNAKE.isDead()) {
-				std::cout << "DEDDIE" << std::endl;
+				render_death_scene("YOU DIED");
+				PAUSED = true;
 			}
 		}
 
