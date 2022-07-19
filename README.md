@@ -1,9 +1,11 @@
-#### SNAKE
+## SNAKE
 
 ### QUICK START
 '''
 chmod +x ./build.sh
-./build.sh && ./Snake
+'''
+'''
+./build.sh 
 '''
 
 ### RESOURCES
