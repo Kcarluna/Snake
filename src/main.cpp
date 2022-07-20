@@ -126,7 +126,6 @@ int main() {
 			render_death_scene("YOU HIT THE WALL");
 			PAUSED = true;
 		}
-		SNAKE.eat();
 		if (!PAUSED) {
 			SNAKE.update();
 			if (SNAKE.isDead()) {
@@ -134,6 +133,7 @@ int main() {
 				PAUSED = true;
 			}
 		}
+		SNAKE.eat();
 
 		render(renderer);
 		SDL_Delay(FPS);

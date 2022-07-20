@@ -11,19 +11,19 @@ Snake::Snake(int x, int y)
 	}
 
 void Snake::set_x(int x) {
-	m_snake[0].x = x;
+	m_snake[m_snake.size() - 1].x = x;
 }
 
 void Snake::set_y(int y) {
-	m_snake[0].y = y;
+	m_snake[m_snake.size() - 1].y = y;
 }
 
 int Snake::get_x() const {
-	return m_snake[0].x;
+	return m_snake[m_snake.size() - 1].x;
 }
 
 int Snake::get_y() const {
-	return m_snake[0].y;
+	return m_snake[m_snake.size() - 1].y;
 }
 
 bool Snake::foodExists() const {
@@ -81,7 +81,7 @@ void Snake::generate_food(int lbound_width, int lbound_height, int ubound_width,
 }
 
 void Snake::eat() {
-	if (m_snake[0].x == m_food.x && m_snake[0].y == m_food.y) {
+	if (m_snake[m_snake.size() - 1].x == m_food.x && m_snake[m_snake.size() - 1].y == m_food.y) {
 		grow();
 		m_foodExists = false;
 	}
@@ -95,8 +95,8 @@ void Snake::grow() {
 
 
 bool Snake::isDead() const {
-	for (int i = 1; i < m_snake.size(); i++) {
-		if (m_snake[0].x == m_snake[i].x && m_snake[0].y == m_snake[i].y) {
+	for (int i = m_snake.size() - 2; i > 0; i--) {
+		if (m_snake[m_snake.size() - 1].x == m_snake[i].x && m_snake[m_snake.size() - 1].y == m_snake[i].y) {
 			return true;
 		}
 	}
@@ -104,11 +104,10 @@ bool Snake::isDead() const {
 }
 
 void Snake::update() {
-	for (int i = m_snake.size() - 1; i > 0; i--) {
-		m_snake[i] = m_snake[i - 1];
-	}
-	m_snake[0].x += m_dx * SQUARE;
-	m_snake[0].y += m_dy * SQUARE;
+	m_snake.push_back(m_snake[m_snake.size() - 1]);
+	m_snake.pop_front();
+	m_snake[m_snake.size() - 1].x += m_dx * SQUARE;
+	m_snake[m_snake.size() - 1].y += m_dy * SQUARE;
 }
 
 void Snake::render(SDL_Renderer *renderer, SDL_Color palette) const {
