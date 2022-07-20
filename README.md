@@ -2,6 +2,7 @@
 
 ### QUICK START
 ```
+cd src/
 chmod +x ./build.sh
 ./build.sh
 ```
