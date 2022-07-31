@@ -2,4 +2,4 @@
 
 set -xe
 
-g++ -std=c++17 main.cpp Snake.cpp -o Snake.o `pkg-config sdl2 --cflags --libs` && ./Snake.o
+g++ -std=c++17 `pkg-config sdl2 --cflags --libs` main.cpp Snake.cpp -o Snake && ./Snake
