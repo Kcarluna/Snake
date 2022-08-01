@@ -2,7 +2,7 @@
 
 ### QUICK START
 
-Dependencies: [SDL2] [SDL2_ttf]
+Dependencies: [SDL2], [SDL2_ttf]
 
 ```
 $ cd src/
